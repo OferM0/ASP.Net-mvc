@@ -1,0 +1,90 @@
+﻿@model ASP18._01._2023.Models.Item
+
+@{
+    ViewData["Title"] = "ItemDetails";
+}
+
+<h1>פרטי @Model.Name</h1>
+
+<div>
+     @if (Model.Images.Count > 0)
+    {
+        if (Model.Images.First().MyImage != null)
+        {
+           <img src="data:image;base64,@System.Convert.ToBase64String(Model.Images.First().MyImage)" width="120" height="80" />
+        }
+    }
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        @if (Model.Images.Count > 0)
+        {
+            foreach (Image image in Model.Images)
+            {
+                if (image.MyImage != null)
+                {
+                    <dt class = "col-sm-2">
+                        תמונה
+                    </dt>
+                    <dd class = "col-sm-10">
+                        <a asp-action="DeleteImage" asp-route-id="@image.ID">
+                            <img src="data:image;base64,@System.Convert.ToBase64String(image.MyImage)" width="80" height="60" />
+                        </a>
+                    </dd>
+                }
+            }
+        }
+
+        @if (Model.Prices.Count > 0)
+        {
+            foreach (Price price in Model.Prices)
+            {
+                if (price.MyPrice != null)
+                {
+                    <dt class = "col-sm-2">
+                        מחיר
+                    </dt>
+                    <dd class = "col-sm-10">
+                        <a asp-action="DeletePrice" asp-route-id="@price.ID">
+                            @price.MyPrice
+                        </a>
+                    </dd>
+                    <dt class = "col-sm-2">
+                        תאריך התחלה
+                    </dt>
+                    <dd class="col-sm-10">
+                            @price.Start
+                    </dd>
+                    <dt class = "col-sm-2">
+                        תאריך סיום
+                    </dt>
+                    <dd class = "col-sm-10">
+                            @price.End
+                    </dd>
+                }
+            }
+        }
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>

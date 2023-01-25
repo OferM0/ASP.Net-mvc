@@ -1,0 +1,117 @@
+﻿@model ASP18._01._2023.Models.Group
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@Model.Name</h1>
+
+<p>
+    <a asp-action="Create">הוספת קבוצה</a>
+</p>
+@if(Model.Parent!=null)
+{
+    <p>
+        <a asp-action="Index" asp-route-id="@Model.Parent.ID"> חזרה לקבוצה @Model.Parent.Name</a>
+    </p>
+}
+@if (Model.SubGroups.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Image)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in Model.SubGroups)
+            {
+                <tr>          
+                    <td>
+                        <a asp-action="Index" asp-route-id="@group.ID">
+                            @Html.DisplayFor(modelItem => group.Name)
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-action="Index" asp-route-id="@group.ID">
+                            @Html.DisplayFor(modelItem => group.Description)
+                        </a>
+                    </td>
+                    <td>
+                        @if (group.Image != null)
+                        {
+                            <img src="data:image;base64,@System.Convert.ToBase64String(group.Image)" width="80" height="60" />
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("הוספת תת קבוצה ל"+ group.Name, "Create", new {  id=group.ID }) |
+                        @Html.ActionLink("הוספת פריט ל"+ group.Name, "AddItem", new {  id=group.ID }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (Model.Items.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.First().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.First().Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.First().Images.First().MyImage)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Items.First().Prices.First().MyPrice)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="ItemDetails" asp-route-id="@item.ID">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-action="ItemDetails" asp-route-id="@item.ID">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </a>
+                    </td>
+                    <td>
+                        @if (item.Images.First() != null)
+                        {
+                            <img src="data:image;base64,@System.Convert.ToBase64String(item.Images.First().MyImage)" width="80" height="60" />
+                        }
+			        </td>
+                    <td>
+                            @Html.DisplayFor(modelItem => item.Prices.First().MyPrice)                       
+                    </td>
+                    <td>
+                        @Html.ActionLink("הוספת מחיר ל"+ item.Name, "AddPrice", new {  id=item.ID }) |
+                        @Html.ActionLink("הוספת תמונה ל"+ item.Name, "AddImage", new {  id=item.ID }) |
+                        @Html.ActionLink("מחיקה", "DeleteItem", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ASP26._12._2022.Models.Friend>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>החברים שלי</h1>
+
+<p>
+    <a asp-action="Create">הוספת חבר חדש</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>תמונת פרופיל</th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+            <tr>          
+                <td>
+                    @if (item.Images.Count > 0)
+                        if (item.Images.First().MyImage != null)
+                        {
+                            <a asp-action="Details" asp-route-id="@item.ID">
+                                <img src="data:image;base64,@System.Convert.ToBase64String(item.Images.First().MyImage)" width="40" height="40" />
+                            </a>
+                        }
+                </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ID">
+                @Html.DisplayFor(modelItem => item.FullName)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>          
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.ActionLink("עריכה", "Edit", new { id=item.ID }) |
+                @Html.ActionLink("פרטי " + item.FirstName, "Details", new { id=item.ID }) |
+                @Html.ActionLink("הסרה", "Delete", new { id=item.ID })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

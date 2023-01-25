@@ -1,0 +1,24 @@
+﻿@model ASP26._12._2022.Models.Friend
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>מחיקת @Model.FullName</h1>
+
+<h3>@(" האם ברצונך למחוק את" +Model.FirstName+"?")</h3>
+<div>
+ @if (Model.Images.Count > 0)
+    {
+        if (Model.Images.First().MyImage != null)
+        {
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Images.First().MyImage)" width="160" height="120" />
+        }
+    }
+    <hr />   
+    
+    <form asp-action="Delete">
+        <input type="submit" value="מחיקה" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

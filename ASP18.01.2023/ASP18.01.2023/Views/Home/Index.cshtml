@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ASP18._01._2023.Models.Item>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@*<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Images.First().MyImage)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+			</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+                @if (item.Images.Count > 0)
+                {
+                    if (item.Images.First().MyImage != null)
+                    {
+                        <img src="data:image;base64,@System.Convert.ToBase64String(item.Images.First().MyImage)" width="80" height="60" />
+                    }
+                }
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@
+
+<div class="card-deck">
+    @foreach (var item in Model)
+    {
+        <div class="card" style="width:200px; height:200px;">
+            @if (item.Images.Count > 0)
+            {
+                if (item.Images.First().MyImage != null)
+                {
+					<img class="card-img-top" alt="Card image cap" src="data:image;base64,@System.Convert.ToBase64String(item.Images.First().MyImage)" width="80" height="80" />
+                }
+            }
+            <div class="card-body">
+                <h6 class="card-title">@item.Name</h6>
+				@*<p class="card-text">@item.Description</p>*@
+            @if (item.Prices.Count > 0)
+            {
+                if (item.Prices.First().MyPrice > 0)
+                {
+                    <p class="card-text">Price: @item.Prices.First().MyPrice</p>
+                }
+            }
+            </div>
+        </div>
+    }
+</div>
