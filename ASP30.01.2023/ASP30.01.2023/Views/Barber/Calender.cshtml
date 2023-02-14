@@ -1,0 +1,88 @@
+﻿@model ASP30._01._2023.ViewModelsBarber.VMCalender
+
+@{
+ViewData["Title"] = "Calender";
+}
+
+<h1>לוח פגישות - @Model.DaysForweard ימים קדימה</h1>
+<p>
+    <a asp-action="AddProgram" asp-route-itemid="@Model.Appointments.First().Haircut.Barber.Id">הוספת לוח פגישות</a>
+</p>
+
+ <form asp-action="Calender">
+    <div class="form-group tag">
+        <label asp-for="DaysForweard" class="control-label"></label>
+        <input asp-for="DaysForweard" class="form-control" name="daysForward" />
+        <span asp-validation-for="DaysForweard" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="עדכן לוח פגישות" class="btn btn-primary" />
+    </div>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                מספר פגישה
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointments.First().DateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointments.First().Haircut.Haircut.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointments.First().ClientName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appointments.First().Haircut.Duration)
+            </th>
+            <th>
+                שעת התחלה
+            </th>
+            <th>
+                שעת סיום
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var daily @*appointment*@ in Model.DailyAppointment @*Model.Appointments.GroupBy(a => a.DateTime.Date)*@)
+        {
+            <tr style="background-color: #e6e6e6; border: 1.5px solid black;" class="toggle-row" onclick="toggleRows()">
+                <td colspan="7">
+                    @daily.First().DateTime.ToString("dddd, dd MMMM yyyy") עבודה מ @daily.First().DateTime.ToShortTimeString() עד @daily.Last().DateTime.AddMinutes(daily.Last().Haircut.Duration).ToShortTimeString()
+                    @*@appointment.Key.ToString("dddd, dd MMMM yyyy") עבודה מ @appointment.First().DateTime.ToShortTimeString() עד @appointment.Last().DateTime.AddMinutes(appointment.Last().Haircut.Duration).ToShortTimeString()*@
+                </td>
+            </tr>
+            int counter = 0;
+            @foreach (var item in daily)
+            {
+                counter++;
+                <tr class="toggle-target" style="display: none;">
+                    <td>
+                        @counter
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Haircut.Haircut.Name)
+                    </td>
+                    <td style="color:@item.StatusColor">
+                        @Html.DisplayFor(modelItem => item.ClientName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Haircut.Duration)
+                    </td>
+                    <td>
+                        @item.DateTime.ToShortTimeString()
+                    </td>
+                    <td>
+                        @item.DateTime.AddMinutes(item.Haircut.Duration).ToShortTimeString()
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

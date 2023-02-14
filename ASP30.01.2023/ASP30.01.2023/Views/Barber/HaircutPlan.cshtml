@@ -1,0 +1,115 @@
+﻿@model ASP30._01._2023.ViewModelsBarber.VMAddHaircut
+
+@{
+    ViewData["Title"] = "HaircutPlan";
+}
+
+<h1>הפעולות שלי</h1>
+
+@*<p>
+    <a asp-action="Create">הוספת ספר חדש</a>
+</p>*@
+
+@if (Model.HaircutsOfBarber.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>         
+                <th>
+                    @Html.DisplayNameFor(model => model.HaircutsOfBarber.First().Haircut.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HaircutsOfBarber.First().Haircut.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HaircutsOfBarber.First().Haircut.Image)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HaircutsOfBarber.First().Price)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HaircutsOfBarber.First().Duration)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HaircutsOfBarber.First().PrecentFromAllHaircuts)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.HaircutsOfBarber)
+            {
+                <tr>           
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Haircut.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Haircut.Description)
+                    </td>
+                    <td>
+                        @if (item.Haircut.Image != null)
+                        {
+
+                            <img src="data:image;base64,@System.Convert.ToBase64String(item.Haircut.Image)" width="80" height="60" />
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Duration)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrecentFromAllHaircuts)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<hr />
+<button class="btn btn-primary" onclick=addHaircut()>הוספת פעולה לתכנית של +@Model.Barber.FullName</button>
+<div id="addHaircut" class="row" style="display:none">
+    <div class="col-md-4">
+        <form asp-action="AddToHaircutPlan" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="HaircutID" class="control-label"></label>
+                <select asp-for="HaircutID" class="form-control">
+                    @if (Model.Haircuts.Count > 0)
+                    {
+                        foreach (Haircut haircut in Model.Haircuts)
+                        {
+                            <option value="@haircut.Id">@haircut.Name</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="HaircutID" class="text-danger"></span>
+            </div>
+            <input asp-for="BarberID" hidden="hidden" />
+            <div class="form-group">
+                <label asp-for="HaircutPerBarber.Price" class="control-label"></label>
+                <input asp-for="HaircutPerBarber.Price" class="form-control" />
+                <span asp-validation-for="HaircutPerBarber.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HaircutPerBarber.Duration" class="control-label"></label>
+                <input asp-for="HaircutPerBarber.Duration" class="form-control" />
+                <span asp-validation-for="HaircutPerBarber.Duration" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HaircutPerBarber.PrecentFromAllHaircuts" class="control-label"></label>
+                <input asp-for="HaircutPerBarber.PrecentFromAllHaircuts" class="form-control" />
+                <span asp-validation-for="HaircutPerBarber.PrecentFromAllHaircuts" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

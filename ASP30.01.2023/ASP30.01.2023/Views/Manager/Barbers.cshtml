@@ -1,0 +1,202 @@
+﻿@model ASP30._01._2023.ViewModelsManager.VMBarbers
+
+@{
+    ViewData["Title"] = "Barbers";
+}
+
+<h1>הספרים שלי</h1>
+
+@*<p>
+    <a asp-action="Create">הוספת ספר חדש</a>
+</p>*@
+
+@if (Model.ActiveBarbers.Count() > 0)
+{
+    <h3>ספרים פעילים</h3>
+    <table class="table">
+        <thead>
+            <tr>    
+                <th>
+                    @Html.DisplayNameFor(model => model.ActiveBarbers.First().FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ActiveBarbers.First().PhoneNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ActiveBarbers.First().Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ActiveBarbers.First().IsActive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ActiveBarbers.First().Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ActiveBarbers.First().Image)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ActiveBarbers)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsActive)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @if (item.Image != null)
+                        {
+
+                            <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="80" height="60" />
+                        }
+                    </td>
+                    <td>
+						@Html.ActionLink("הפוך סטטוס","ChangeActive" , new { id=item.Id }) |
+                        @Html.ActionLink("ערוך", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("פרטים", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("מחק", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (Model.NotActiveBarbers.Count() > 0)
+{
+    <h3>ספרים לא פעילים</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.NotActiveBarbers.First().FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NotActiveBarbers.First().PhoneNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NotActiveBarbers.First().Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NotActiveBarbers.First().IsActive)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NotActiveBarbers.First().Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NotActiveBarbers.First().Image)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.NotActiveBarbers)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsActive)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @if (item.Image != null)
+                        {
+
+                            <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="80" height="60" />
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("הפוך סטטוס","ChangeActive" , new { id=item.Id }) |
+                        @Html.ActionLink("ערוך", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("פרטים", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("מחק", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<button class="btn btn-primary" onclick=addHaircut()>הוספת ספר</button>
+<div id="addHaircut" class="row" style="display:none">
+    <div class="col-md-4">
+        <button class="btn btn-warning" onclick=closeTags()>בחר מרשימה</button>
+        <form asp-action="AddBarber" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" id="selectedTag" style="display:none">
+               <label asp-for="SelectedUserId" class="control-label"></label>
+                <select asp-for="SelectedUserId" class="form-control">
+                    @if (Model.Users.Count > 0)
+                    {
+                        foreach (User user in Model.Users)
+                        {
+                            <option value="@user.Id">@user.FullName</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="SelectedUserId" class="text-danger"></span>
+			</div>
+            <div class="form-group tag">
+                <label asp-for="Barber.FirstName" class="control-label"></label>
+                <input asp-for="Barber.FirstName" class="form-control" />
+                <span asp-validation-for="Barber.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group tag">
+                <label asp-for="Barber.LastName" class="control-label"></label>
+                <input asp-for="Barber.LastName" class="form-control" />
+                <span asp-validation-for="Barber.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group tag">
+                <label asp-for="Barber.Description" class="control-label"></label>
+                <input asp-for="Barber.Description" class="form-control" />
+                <span asp-validation-for="Barber.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group tag">
+                <label asp-for="Barber.Email" class="control-label"></label>
+                <input asp-for="Barber.Email" class="form-control" />
+                <span asp-validation-for="Barber.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group tag">
+                <label asp-for="Barber.PhoneNumber" class="control-label"></label>
+                <input asp-for="Barber.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Barber.PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group tag">
+                <label asp-for="Barber.Password" class="control-label"></label>
+                <input asp-for="Barber.Password" class="form-control" />
+                <span asp-validation-for="Barber.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group tag">
+                <label asp-for="File" class="control-label"></label>
+                <input type="file" asp-for="File" class="form-control" />
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="הוספת ספר" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
